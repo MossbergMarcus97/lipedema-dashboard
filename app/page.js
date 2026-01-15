@@ -119,7 +119,7 @@ export default function Dashboard() {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Lipedema-studie: Klinisk kvalitetsoversikt</h1>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">State of Lipedema 2026</h1>
               <p className="text-gray-500">IbsenSykehusene | Aug 2021–Aug 2025</p>
             </div>
           </div>

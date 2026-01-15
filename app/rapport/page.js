@@ -4,7 +4,7 @@ import Link from 'next/link';
 import mammoth from 'mammoth';
 
 export const metadata = {
-  title: 'Rapport | Lipedema-studie',
+  title: 'State of Lipedema 2026 | Rapport',
   description: 'Klinisk rapport for lipedema-studien ved IbsenSykehusene (2021–2025).'
 };
 
