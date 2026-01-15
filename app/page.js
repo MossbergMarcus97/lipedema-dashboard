@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, PieChart, Pie, Cell } from 'recharts';
 
 const treatmentData = [
-  { name: 'Kun konsultasjon', value: 114 },
-  { name: 'Operert ved IbsenSykehusene', value: 65 },
-  { name: 'Operert andre steder', value: 11 },
-  { name: 'Operert begge steder', value: 12 }
+  { name: 'Konsultasjon alene', value: 114 },
+  { name: 'Kirurgisk behandlet ved IbsenSykehusene', value: 65 },
+  { name: 'Kirurgisk behandlet andre steder', value: 11 },
+  { name: 'Kirurgisk behandlet både ved IbsenSykehusene og andre steder', value: 12 }
 ];
 
 const rand12Data = [
@@ -28,16 +29,16 @@ const compositeData = [
 
 const symptomData = [
   { symptom: 'Smerter', consultation: 3.19, operated: 2.57 },
-  { symptom: 'Blaamerker', consultation: 2.92, operated: 2.15 },
-  { symptom: 'Tyngdefoelelse', consultation: 3.42, operated: 2.41 },
-  { symptom: 'Begrensninger', consultation: 2.42, operated: 1.98 }
+  { symptom: 'Blåmerker', consultation: 2.92, operated: 2.15 },
+  { symptom: 'Tyngdefølelse', consultation: 3.42, operated: 2.41 },
+  { symptom: 'Mobilitetsbegrensninger', consultation: 2.42, operated: 1.98 }
 ];
 
 const employmentData = [
   { status: 'Heltid', consultation: 40.9, operated: 55.9 },
   { status: 'Deltid', consultation: 14.0, operated: 13.2 },
   { status: 'Sykmeldt', consultation: 15.1, operated: 8.8 },
-  { status: 'Ufoeretrygd', consultation: 22.6, operated: 16.2 },
+  { status: 'Uføretrygd', consultation: 22.6, operated: 16.2 },
   { status: 'Ikke i arbeid', consultation: 7.5, operated: 5.9 }
 ];
 
@@ -118,22 +119,33 @@ export default function Dashboard() {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Lipedema Studie Dashboard</h1>
-              <p className="text-gray-500">IbsenSykehusene | August 2021 - August 2025</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Lipedema-studie: Klinisk kvalitetsoversikt</h1>
+              <p className="text-gray-500">IbsenSykehusene | Aug 2021–Aug 2025</p>
             </div>
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <StatCard title="Totalt invitert" value="719" subtitle="Pasienter kontaktet" />
           <StatCard title="Respondenter" value="202" subtitle="28% svarprosent" />
-          <StatCard title="Opererte pasienter" value="285" subtitle="700 prosedyrer totalt" />
-          <StatCard title="Studieperiode" value="4 aar" subtitle="Aug 2021 - Aug 2025" />
+          <StatCard title="Kirurgisk behandlede pasienter" value="285" subtitle="700 prosedyrer totalt" />
+          <StatCard title="Studieperiode" value="4 år" subtitle="Aug 2021–Aug 2025" />
+        </div>
+        <div className="mb-8 flex flex-wrap items-center gap-3">
+          <Link href="/rapport" className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+            Les full rapport
+          </Link>
+          <a
+            href="/reports/lipedema-rapport.docx"
+            className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-gray-200 transition hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+          >
+            Last ned DOCX
+          </a>
         </div>
         <div className="flex flex-wrap gap-2 mb-8 bg-gray-100 p-2 rounded-2xl" role="tablist" aria-label="Dashboardseksjoner">
-          <TabButton id="overview" label="Oversikt" active={activeTab === 'overview'} />
+          <TabButton id="overview" label="Klinisk oversikt" active={activeTab === 'overview'} />
           <TabButton id="health" label="Helsestatus (RAND-12)" active={activeTab === 'health'} />
-          <TabButton id="symptoms" label="Symptomer" active={activeTab === 'symptoms'} />
-          <TabButton id="employment" label="Arbeidsdeltagelse" active={activeTab === 'employment'} />
+          <TabButton id="symptoms" label="Symptombelastning" active={activeTab === 'symptoms'} />
+          <TabButton id="employment" label="Arbeidsdeltakelse" active={activeTab === 'employment'} />
         </div>
         {activeTab === 'overview' && (
           <div className="space-y-6" id={getPanelId('overview')} role="tabpanel" aria-labelledby={getTabId('overview')}>
@@ -158,7 +170,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="bg-white rounded-2xl p-6 shadow-lg">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Sammensatte helsescorer</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Komposittskårer for helse</h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={compositeData} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -166,29 +178,29 @@ export default function Dashboard() {
                     <YAxis dataKey="name" type="category" width={100} />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="consultation" name="Kun konsultasjon" fill={CHART_COLORS.consultation} radius={[0, 4, 4, 0]} />
-                    <Bar dataKey="operated" name="Operert" fill={CHART_COLORS.operated} radius={[0, 4, 4, 0]} />
+                    <Bar dataKey="consultation" name="Konsultasjon alene" fill={CHART_COLORS.consultation} radius={[0, 4, 4, 0]} />
+                    <Bar dataKey="operated" name="Kirurgisk behandlet" fill={CHART_COLORS.operated} radius={[0, 4, 4, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
                 <div className="mt-4 p-4 bg-green-50 rounded-xl">
-                  <p className="text-green-800 text-sm"><strong>Forbedring:</strong> Opererte pasienter scorer i snitt {formatDecimal(averageCompositeDiff, 0)}+ poeng hoyere</p>
+                  <p className="text-green-800 text-sm"><strong>Klinisk forbedring:</strong> Kirurgisk behandlede pasienter scorer i snitt {formatDecimal(averageCompositeDiff, 0)}+ poeng høyere</p>
                 </div>
               </div>
             </div>
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 text-white">
-              <h3 className="text-xl font-semibold mb-4">Hovedfunn</h3>
+              <h3 className="text-xl font-semibold mb-4">Kliniske hovedfunn</h3>
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="bg-white/10 rounded-xl p-4 backdrop-blur">
                   <p className="text-3xl font-bold">+{formatDecimal(physicalDiff)}</p>
-                  <p className="text-indigo-100 text-sm">Hoyere fysisk helsescore hos opererte</p>
+                  <p className="text-indigo-100 text-sm">Høyere fysisk helseskår hos kirurgisk behandlede</p>
                 </div>
                 <div className="bg-white/10 rounded-xl p-4 backdrop-blur">
                   <p className="text-3xl font-bold">+{formatDecimal(mentalDiff)}</p>
-                  <p className="text-indigo-100 text-sm">Hoyere mental helsescore hos opererte</p>
+                  <p className="text-indigo-100 text-sm">Høyere mental helseskår hos kirurgisk behandlede</p>
                 </div>
                 <div className="bg-white/10 rounded-xl p-4 backdrop-blur">
                   <p className="text-3xl font-bold">-{formatPercent(avgSymptomReduction)}%</p>
-                  <p className="text-indigo-100 text-sm">Lavere symptombelastning hos opererte</p>
+                  <p className="text-indigo-100 text-sm">Lavere symptombelastning hos kirurgisk behandlede</p>
                 </div>
               </div>
             </div>
@@ -197,8 +209,8 @@ export default function Dashboard() {
         {activeTab === 'health' && (
           <div className="space-y-6" id={getPanelId('health')} role="tabpanel" aria-labelledby={getTabId('health')}>
             <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">RAND-12 Domenescorer</h3>
-              <p className="text-gray-500 text-sm mb-4">Skala 0-100, hoyere = bedre helse</p>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">RAND-12 domeneskårer</h3>
+              <p className="text-gray-500 text-sm mb-4">Skala 0–100, høyere = bedre helse</p>
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={rand12Data}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -206,20 +218,20 @@ export default function Dashboard() {
                   <YAxis domain={[0, 100]} />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="consultation" name="Kun konsultasjon" fill={CHART_COLORS.consultation} radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="operated" name="Operert" fill={CHART_COLORS.operated} radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="consultation" name="Konsultasjon alene" fill={CHART_COLORS.consultation} radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="operated" name="Kirurgisk behandlet" fill={CHART_COLORS.operated} radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
             <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Helseprofil - Radardiagram</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Helseprofil – radardiagram</h3>
               <ResponsiveContainer width="100%" height={400}>
                 <RadarChart data={rand12Data}>
                   <PolarGrid stroke="#e5e7eb" />
                   <PolarAngleAxis dataKey="fullName" tick={{ fontSize: 11 }} />
                   <PolarRadiusAxis domain={[0, 100]} />
-                  <Radar name="Kun konsultasjon" dataKey="consultation" stroke={CHART_COLORS.consultation} fill={CHART_COLORS.consultation} fillOpacity={0.3} />
-                  <Radar name="Operert" dataKey="operated" stroke={CHART_COLORS.operated} fill={CHART_COLORS.operated} fillOpacity={0.3} />
+                  <Radar name="Konsultasjon alene" dataKey="consultation" stroke={CHART_COLORS.consultation} fill={CHART_COLORS.consultation} fillOpacity={0.3} />
+                  <Radar name="Kirurgisk behandlet" dataKey="operated" stroke={CHART_COLORS.operated} fill={CHART_COLORS.operated} fillOpacity={0.3} />
                   <Legend />
                   <Tooltip />
                 </RadarChart>
@@ -244,16 +256,16 @@ export default function Dashboard() {
           <div className="space-y-6" id={getPanelId('symptoms')} role="tabpanel" aria-labelledby={getTabId('symptoms')}>
             <div className="bg-white rounded-2xl p-6 shadow-lg">
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Lipedema-spesifikke symptomer</h3>
-              <p className="text-gray-500 text-sm mb-4">Skala 0-4 (Aldri til Alltid), lavere = bedre</p>
+              <p className="text-gray-500 text-sm mb-4">Skala 0–4 (aldri–alltid), lavere = bedre</p>
               <ResponsiveContainer width="100%" height={350}>
                 <BarChart data={symptomData} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis type="number" domain={[0, 4]} />
-                  <YAxis dataKey="symptom" type="category" width={100} />
+                  <YAxis dataKey="symptom" type="category" width={160} />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="consultation" name="Kun konsultasjon" fill={CHART_COLORS.consultation} radius={[0, 4, 4, 0]} />
-                  <Bar dataKey="operated" name="Operert" fill={CHART_COLORS.operated} radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="consultation" name="Konsultasjon alene" fill={CHART_COLORS.consultation} radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="operated" name="Kirurgisk behandlet" fill={CHART_COLORS.operated} radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -269,11 +281,11 @@ export default function Dashboard() {
               ))}
             </div>
             <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-6 text-white">
-              <h3 className="text-xl font-semibold mb-4">Samlet symptombelastning</h3>
+              <h3 className="text-xl font-semibold mb-4">Samlet symptombyrde</h3>
               <div className="grid md:grid-cols-3 gap-6">
-                <div className="text-center"><p className="text-4xl font-bold">{formatDecimal(avgSymptomConsultation, 2)}</p><p className="text-emerald-100">Kun konsultasjon</p></div>
+                <div className="text-center"><p className="text-4xl font-bold">{formatDecimal(avgSymptomConsultation, 2)}</p><p className="text-emerald-100">Konsultasjon alene</p></div>
                 <div className="flex items-center justify-center"><div className="bg-white/20 rounded-full px-6 py-2"><span className="text-2xl font-bold">til</span></div></div>
-                <div className="text-center"><p className="text-4xl font-bold">{formatDecimal(avgSymptomOperated, 2)}</p><p className="text-emerald-100">Operert</p></div>
+                <div className="text-center"><p className="text-4xl font-bold">{formatDecimal(avgSymptomOperated, 2)}</p><p className="text-emerald-100">Kirurgisk behandlet</p></div>
               </div>
               <p className="text-center mt-4 text-emerald-100">p = 1.8e-8 (statistisk signifikant)</p>
             </div>
@@ -282,7 +294,7 @@ export default function Dashboard() {
         {activeTab === 'employment' && (
           <div className="space-y-6" id={getPanelId('employment')} role="tabpanel" aria-labelledby={getTabId('employment')}>
             <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Arbeidsdeltagelse etter behandlingsgruppe</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Arbeidsdeltakelse etter behandlingsgruppe</h3>
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={employmentData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -290,33 +302,33 @@ export default function Dashboard() {
                   <YAxis domain={[0, 60]} tickFormatter={(value) => `${value}%`} />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="consultation" name="Kun konsultasjon" fill={CHART_COLORS.consultation} radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="operated" name="Operert" fill={CHART_COLORS.operated} radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="consultation" name="Konsultasjon alene" fill={CHART_COLORS.consultation} radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="operated" name="Kirurgisk behandlet" fill={CHART_COLORS.operated} radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white rounded-2xl p-6 shadow-lg">
-                <h4 className="font-semibold text-gray-800 mb-4">Positive trender hos opererte</h4>
+                <h4 className="font-semibold text-gray-800 mb-4">Positive trender hos kirurgisk behandlede</h4>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl"><span className="text-gray-700">Heltidsarbeid</span><div className="flex items-center gap-2"><span className="text-gray-500">40.9%</span><span className="font-bold text-green-600">55.9%</span></div></div>
                   <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl"><span className="text-gray-700">Sykmelding</span><div className="flex items-center gap-2"><span className="text-gray-500">15.1%</span><span className="font-bold text-green-600">8.8%</span></div></div>
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl"><span className="text-gray-700">Ufoeretrygd</span><div className="flex items-center gap-2"><span className="text-gray-500">22.6%</span><span className="font-bold text-green-600">16.2%</span></div></div>
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl"><span className="text-gray-700">Uføretrygd</span><div className="flex items-center gap-2"><span className="text-gray-500">22.6%</span><span className="font-bold text-green-600">16.2%</span></div></div>
                 </div>
               </div>
               <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 text-white">
-                <h4 className="font-semibold mb-4">Nokkeltall arbeidsdeltagelse</h4>
+                <h4 className="font-semibold mb-4">Nøkkeltall arbeidsdeltakelse</h4>
                 <div className="space-y-4">
-                  <div><p className="text-4xl font-bold">+{formatPercent(fullTimeIncrease)}%</p><p className="text-blue-100">Okning i heltidsarbeid blant opererte</p></div>
-                  <div><p className="text-4xl font-bold">-{formatPercent(sickLeaveReduction)}%</p><p className="text-blue-100">Reduksjon i sykefravaer blant opererte</p></div>
+                  <div><p className="text-4xl font-bold">+{formatPercent(fullTimeIncrease)}%</p><p className="text-blue-100">Økning i heltidsarbeid blant kirurgisk behandlede</p></div>
+                  <div><p className="text-4xl font-bold">-{formatPercent(sickLeaveReduction)}%</p><p className="text-blue-100">Reduksjon i sykefravær blant kirurgisk behandlede</p></div>
                 </div>
               </div>
             </div>
           </div>
         )}
         <div className="mt-8 text-center text-gray-500 text-sm">
-          <p>Data fra anonym tverrsnittsundersokelse ved IbsenSykehusene</p>
-          <p className="mt-1">N = 202 respondenter | 28% svarprosent | August 2021 - August 2025</p>
+          <p>Data fra anonym tverrsnittsundersøkelse ved IbsenSykehusene</p>
+          <p className="mt-1">N = 202 respondenter | 28% svarprosent | Aug 2021–Aug 2025</p>
         </div>
       </div>
     </div>
